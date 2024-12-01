@@ -1,0 +1,188 @@
+---
+title: "Exploratory Data Analysis"
+output: 
+  html_document:
+    theme: flatly
+    toc: true
+    toc_float: true
+    code_folding: hide
+---
+
+```{r include = FALSE}
+library(tidyverse)
+library(haven)
+library(viridis)
+library(RColorBrewer)
+library(scales)
+library(plotly)
+```
+
+```{r}
+ukb_data <- read_dta("./data_prepared.dta")
+```
+
+### Age and Sex Distribution
+```{r}
+figure_1 <- ukb_data %>%
+  mutate(age_group = cut(age, breaks = seq(10, 100, by = 10), right = FALSE, 
+                         labels = paste(seq(10, 90, by = 10), "-", 
+                                        seq(19, 99, by = 10), sep = ""))) %>%
+  ggplot(aes(x = age_group, y = age, fill = as.factor(sex))) + 
+  geom_boxplot(alpha = 0.9) + 
+  theme_minimal() +
+  labs(x = 'Age Groups', 
+       y = 'Age',
+       title = 'Age Distribution by Sex and Age Groups',
+       fill = 'Sex') +
+  scale_fill_manual(values = c("lightblue", "lightpink"),
+                    labels = c("Female", "Male")) +
+  theme(legend.position = "bottom")
+
+figure_1
+```
+
+We examined the age distribution of male and female participants across 10-year age groups. In the 30-39 age group, the sample size was relatively small, with median ages and IQRs consistent across sexes. Similar trends were observed in the 40-49 and 50-59 groups. In the 60-69 group, females exhibited slightly higher upper quartiles than males, while the 70-79 group showed broader distributions for females, indicating more variation in ages.
+
+<br>
+
+### Alcohol Consumption and Disease Incidence
+```{r message = FALSE}
+# Data cleaning
+disease_heat2 <- ukb_data %>%
+  filter(!is.na(sex), !is.na(total_alcohol), !is.na(nafld_outcome)) %>%
+  mutate(
+    alcohol_group = cut(total_alcohol, 
+                       breaks = c(-Inf, 0, 5, 10, 15, Inf),
+                       labels = c("None", "Low", "Medium", "High", "Very High"),
+                       include.lowest = TRUE)
+  ) %>%
+  group_by(sex, alcohol_group) %>%
+  summarise(
+    disease_rate = mean(nafld_outcome, na.rm = TRUE),
+    n = n()
+  ) %>%
+  ungroup()
+
+ukb_data <- ukb_data %>%
+  mutate(
+    sex = as_factor(sex), 
+    nafld_outcome = as.numeric(as_factor(nafld_outcome)),
+    total_alcohol = as.numeric(total_alcohol),
+    income = as.numeric(income)
+  )
+
+disease_heat2 <- ukb_data %>%
+  filter(!is.na(sex), !is.na(total_alcohol), !is.na(nafld_outcome)) %>%
+  mutate(
+    alcohol_group = cut(total_alcohol, 
+                       breaks = c(-Inf, 0, 5, 10, 15, Inf),
+                       labels = c("None", "Low", "Medium", "High", "Very High"),
+                       include.lowest = TRUE)
+  ) %>%
+  group_by(sex, alcohol_group) %>%
+  summarise(
+    disease_rate = mean(nafld_outcome, na.rm = TRUE),
+    n = n()
+  ) %>%
+  ungroup()
+
+# Create heatmap
+figure_2 <- ggplot(disease_heat2, aes(x = sex, y = alcohol_group, fill = disease_rate)) +
+  geom_tile() +
+  scale_fill_gradient(low = "white", high = "red") +
+  theme_minimal() +
+  labs(title = "Disease Incidence by Sex and Alcohol Consumption",
+       x = "Sex",
+       y = "Alcohol Consumption Level",
+       fill = "Disease Rate") +
+  geom_text(aes(label = sprintf("n=%d", n)), color = "black", size = 3)
+
+ggplotly(figure_2)
+```
+
+A heatmap analysis revealed an inverse relationship between alcohol consumption and disease incidence. Non-drinkers exhibited the highest disease rates, with males outnumbering females. In contrast, participants with very high alcohol consumption had the lowest disease rates. Across all categories, females demonstrated slightly higher disease rates than males.
+
+<br>
+
+### Blood Pressure and Age Trends
+```{r message = FALSE}
+# Data Cleaning
+disease_heat1 <- ukb_data %>%
+  filter(!is.na(age), !is.na(bp_cat), !is.na(nafld_outcome)) %>%
+  mutate(
+    bp_cat = as_factor(bp_cat),
+    age_group = cut(age, 
+                   breaks = c(30, 40, 50, 60, 70, 80),
+                   labels = c("30-40", "40-50", "50-60", "60-70", "70-80"),
+                   include.lowest = TRUE)
+  ) %>%
+  group_by(age_group, bp_cat) %>%
+  summarise(
+    disease_rate = mean(nafld_outcome, na.rm = TRUE),
+    n = n()
+  ) %>%
+  ungroup()
+
+# Create heatmap 
+figure_4 <- ggplot(disease_heat1, aes(x = age_group, y = bp_cat, fill = disease_rate)) +
+  geom_tile() +
+  scale_fill_gradient(low = "white", high = "red") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45)) +
+  labs(title = "Disease Incidence by Age and Blood Pressure Category",
+       x = "Age Groups",
+       y = "BP Category",
+       fill = "Disease Rate") +
+  geom_text(aes(label = sprintf("n=%d", n)), color = "black", size = 3)
+
+ggplotly(figure_4)
+```
+
+We observed that disease incidence increased significantly with higher blood pressure, particularly in individuals aged 60 and above. Younger age groups (30-40) showed low disease incidence even at higher blood pressure levels, while middle-aged and older groups demonstrated steeper increases. The largest sample sizes were concentrated in moderate blood pressure categories (BP=40-60).
+
+<br>
+
+### Income and Diet Quality
+```{r}
+color_palette <- colorRampPalette(c("lightblue", "darkblue"))(length(unique(ukb_data$diet_quality)))
+
+figure_4 <- ukb_data %>%
+  filter(!is.na(income) & !is.na(diet_quality)) %>%
+  ggplot(aes(x = as.factor(income), fill = as.factor(diet_quality))) +
+  geom_bar(position = "stack") +
+  theme_minimal() +
+  scale_fill_manual(values = color_palette) +
+  labs(x = "Income Levels",
+       y = "Count",
+       fill = "Diet Quality",
+       title = "Income vs Diet Quality") +
+  theme(legend.position = "bottom")
+
+ggplotly(figure_4)
+```
+
+Diet quality showed a positive correlation with income levels. Participants in the highest income bracket had the highest proportions of top diet quality, while those in the lowest income bracket exhibited the poorest diet quality. Middle-income groups displayed more balanced distributions.
+
+<br>
+
+### Sleep Duration Across Age Groups
+```{r}
+figure_5 <- ukb_data %>% 
+  filter(!is.na(age) & !is.na(sleep_hour)) %>%
+  mutate(age_group = cut(age, breaks = seq(10, 100, by = 10), right = FALSE, 
+                         labels = paste(seq(10, 90, by = 10), "-", 
+                                        seq(19, 99, by = 10), sep = ""))) %>%
+  ggplot(aes(x = age_group, y = sleep_hour, fill = age_group)) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs(x = "Age Groups", 
+       y = "Sleep Hours per Night",
+       title = "Sleep Hours per Night by Age Groups",
+       fill = "Age Groups") + 
+  scale_fill_manual(values = c("lightgreen", "lightpink", "lightblue", 
+                               "lightcoral", "lightgoldenrod"))
+
+ggplotly(figure_5)
+```
+
+Sleep duration varied slightly by age. Younger participants (30-39) had the shortest median sleep duration and the highest prevalence of short sleep (<6 hours). Older age groups (60-69, 70-79) displayed greater variability, with outliers on both ends of the sleep duration spectrum, suggesting more diverse sleep patterns in older adults.
