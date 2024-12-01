@@ -2,3 +2,5 @@
 .Rhistory
 .RData
 .Ruserdata
+
+./data_prepared.dta
