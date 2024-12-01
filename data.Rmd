@@ -1,0 +1,35 @@
+---
+title: "Data Summary"
+output: 
+  html_document:
+    theme: flatly
+    toc: true
+    toc_float: true
+    code_folding: hide
+---
+
+### UKB Dataset
+The UKB dataset provides comprehensive data on health, lifestyle, and demographic variables. We used several key variables to investigate our research questions:
+
+`Age`: Participants' age, categorized into 10-year age groups (30-39, 40-49, etc.) <br>
+`Sex`: Male or female <br>
+`Alcohol Consumption`: Grouped into categories (non-drinker, low, medium, high, very high) <br>
+`Blood Pressure (BP)`: Continuous variable categorized into intervals (e.g., BP=20, 40, 60, etc.) <br>
+`Income Levels`: Seven income brackets, ranging from 1 (lowest) to 7 (highest) <br>
+`Diet Quality`: Scored from 0 (poorest) to 7 (highest) <br>
+`Sleep Hours`: Nightly sleep duration, measured in hours <br>
+
+<br>
+
+### Data Cleaning
+Before analysis, the data was cleaned and processed using RStudio to ensure accuracy and usability:
+
+- Missing values were handled appropriately.
+- Continuous variables were transformed and categorized.
+- Derived variables, such as quartiles for inflammatory indices, were created for group analysis.
+- Outliers were identified and removed to avoid skewing results.
+
+The final cleaned dataset contained observations across all key variables, ready for exploratory analysis and visualization.
+
+[View Full Data Cleaning Steps on GitHub](https://github.com/DangLin1214/test3_abc.github.io/blob/main/data_preparation.R)
+
