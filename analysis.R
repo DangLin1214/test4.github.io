@@ -6,8 +6,18 @@ library(tableone)
 library(survminer)
 
 
-dt = read_dta("./data/data_prepared.dta") |>
-  janitor::clean_names()
+dt = read_dta("./data_prepared.dta") |>
+  janitor::clean_names() |>
+  mutate(
+    expo_lmr_cat = as.factor(expo_lmr_cat),
+    expo_sii_cat = as.factor(expo_sii_cat),
+    expo_npar_cat = as.factor(expo_npar_cat),
+    expo_nps_cat = as.factor(expo_nps_cat),
+    sex = as.factor(sex),
+    income = as.factor(income),
+    marriage = as.factor(marriage),
+    smoke_cat = as.factor(smoke_cat)
+  )
 
 # baseline ----
 vars <- c("sex", "age", "income", "townsend",
@@ -173,7 +183,7 @@ for (expo in expo_list) {
   
   for (outcome in outcome_list) {
     
-    surv_formula <- as.formula(
+    surv_formula = as.formula(
       paste0("Surv(", outcome, "_surv_duration, ", outcome, "_outcome)~", expo)
     )
 
@@ -184,7 +194,7 @@ for (expo in expo_list) {
                fun = "cumhaz",
                censor = FALSE,
                pval = TRUE,
-               risk.table = FALSE,
+               risk.table = "absolute",
                risk.table.col = "strata",
                xlab = "Follow up time(d)", 
                legend = c(0.2,0.8),
@@ -195,16 +205,15 @@ for (expo in expo_list) {
                palette = c("#E7B800", "#2E9FDF", "green4"),
                ggtheme = theme_minimal())
     
+    combined_plot =
+      arrange_ggsurvplots(
+        list(plot),
+        print = FALSE
+      )
+    
     name = paste0("cumhaz_", expo , "_", outcome, ".png")
-    ggsave(name, plot = plot$plot, width = 8, height = 6, dpi = 300)
+    ggsave(name, plot = combined_plot, width = 16, height = 6, dpi = 300)
     
   }
 }
-
-# subgroup analysis
-
-
-
-# form a function
-
 
