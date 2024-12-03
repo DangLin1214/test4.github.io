@@ -8,6 +8,7 @@ output:
     code_folding: hide
 ---
 
+
 ```{r include = FALSE}
 library(tidyverse)
 library(haven)
@@ -15,7 +16,10 @@ library(viridis)
 library(RColorBrewer)
 library(scales)
 library(plotly)
+library(patchwork)
+library(gridExtra)
 ```
+
 
 ```{r}
 ukb_data <- read_dta("./data_prepared.dta")
@@ -182,7 +186,802 @@ figure_5 <- ukb_data %>%
   scale_fill_manual(values = c("lightgreen", "lightpink", "lightblue", 
                                "lightcoral", "lightgoldenrod"))
 
-ggplotly(figure_5)
+figure_5
 ```
 
 Sleep duration varied slightly by age. Younger participants (30-39) had the shortest median sleep duration and the highest prevalence of short sleep (<6 hours). Older age groups (60-69, 70-79) displayed greater variability, with outliers on both ends of the sleep duration spectrum, suggesting more diverse sleep patterns in older adults.
+
+<br> 
+
+### Exposure variables and disease outcomes
+
+
+### Blood parameters and disease outcomes
+
+
+
+
+
+# 1
+```{r message = FALSE, warning = FALSE}
+quantiles <- ukb_data %>%
+  group_by(nafld_outcome) %>%
+  filter(!is.na(b_lympho)) %>%
+  summarize(
+    q25 = quantile(b_lympho, 0.25),
+    median = median(b_lympho),
+    q75 = quantile(b_lympho, 0.75))
+
+figure_14 <- ukb_data %>% 
+  group_by(nafld_outcome) %>% 
+  filter(!is.na(b_lympho)) %>% 
+  mutate(
+    lower_bound = quantile(b_lympho, 0.25) - 1.5 * IQR(b_lympho),
+    upper_bound = quantile(b_lympho, 0.75) + 1.5 * IQR(b_lympho)
+  ) %>%
+  filter(b_lympho >= lower_bound & b_lympho <= upper_bound) %>% 
+  ggplot(aes(x = b_lympho, fill = as.factor(nafld_outcome))) +
+  geom_density(alpha = 0.7) +
+  scale_fill_manual(values = c("#BCBDDC", "lightyellow"), name = "NAFLD Outcome", 
+                    labels = c("Healthy", "Disease")) +
+  labs(
+    x = "Lymphocyte",
+    y = "Density",
+    title = "Density Plot of b_lympho by NAFLD Outcome"
+  ) +
+  theme_minimal(base_size = 14) + 
+  theme(
+    legend.position = "bottom",               
+    plot.title = element_text(size = 8),      
+    axis.title.x = element_text(size = 8),    
+    axis.title.y = element_text(size = 8),   
+    axis.text.x = element_text(size = 8),     
+    axis.text.y = element_text(size = 8), 
+    legend.title = element_text(size = 8),      
+    legend.text = element_text(size = 8),
+    legend.key.size = unit(0.4, "cm")
+  ) +  
+  geom_vline(data = quantiles, aes(xintercept = q25, 
+                                   color = as.factor(nafld_outcome)), 
+             linetype = "dashed", size = 0.8, show.legend = FALSE) +
+  geom_vline(data = quantiles, aes(xintercept = median, 
+                                   color = as.factor(nafld_outcome)), 
+             linetype = "solid", size = 1, show.legend = FALSE) +
+  geom_vline(data = quantiles, aes(xintercept = q75, 
+                                   color = as.factor(nafld_outcome)), 
+             linetype = "dashed", size = 0.8, show.legend = FALSE) +
+  scale_color_manual(values = c("#8A2BE2", "#FDAE6B"))
+
+
+quantiles <- ukb_data %>%
+  group_by(nafld_outcome) %>%
+  filter(!is.na(b_mono)) %>%
+  summarize(
+    q25 = quantile(b_mono, 0.25),
+    median = median(b_mono),
+    q75 = quantile(b_mono, 0.75)
+  )
+
+figure_15 <-ukb_data %>% 
+  group_by(nafld_outcome) %>% 
+  filter(!is.na(b_mono)) %>% 
+  mutate(
+    lower_bound = quantile(b_mono, 0.25) - 1.5 * IQR(b_mono),
+    upper_bound = quantile(b_mono, 0.75) + 1.5 * IQR(b_mono)
+  ) %>%
+  filter(b_mono >= lower_bound & b_mono <= upper_bound) %>% 
+  ggplot(aes(x = b_mono, fill = as.factor(nafld_outcome))) +
+  geom_density(alpha = 0.7) +
+  scale_fill_manual(values = c("#BCBDDC", "lightyellow"), name = "NAFLD Outcome", 
+                    labels = c("Healthy", "Disease")) +
+  labs(
+    x = "Monocytes",
+    y = "Density",
+    title = "Density Plot of b_mono by NAFLD Outcome"
+  ) +
+  theme_minimal(base_size = 14) + 
+  theme(
+    legend.position = "bottom",               
+    plot.title = element_text(size = 8),      
+    axis.title.x = element_text(size = 8),    
+    axis.title.y = element_text(size = 8),   
+    axis.text.x = element_text(size = 8),     
+    axis.text.y = element_text(size = 8), 
+    legend.title = element_text(size = 8),      
+    legend.text = element_text(size = 8),
+    legend.key.size = unit(0.4, "cm")
+  ) +  
+  geom_vline(data = quantiles, aes(xintercept = q25, 
+                                   color = as.factor(nafld_outcome)), 
+             linetype = "dashed", size = 0.8, show.legend = FALSE) +
+  geom_vline(data = quantiles, aes(xintercept = median, 
+                                   color = as.factor(nafld_outcome)), 
+             linetype = "solid", size = 1, show.legend = FALSE) +
+  geom_vline(data = quantiles, aes(xintercept = q75, 
+                                   color = as.factor(nafld_outcome)), 
+             linetype = "dashed", size = 0.8, show.legend = FALSE) +
+  scale_color_manual(values = c("#8A2BE2", "#FDAE6B"))
+
+quantiles <- ukb_data %>%
+  group_by(nafld_outcome) %>%
+  filter(!is.na(b_neutro)) %>%
+  summarize(
+    q25 = quantile(b_neutro, 0.25),
+    median = median(b_neutro),
+    q75 = quantile(b_neutro, 0.75)
+  )
+
+figure_16 <- ukb_data %>% 
+  group_by(nafld_outcome) %>% 
+  filter(!is.na(b_neutro)) %>% 
+  mutate(
+    lower_bound = quantile(b_neutro, 0.25) - 1.5 * IQR(b_neutro),
+    upper_bound = quantile(b_neutro, 0.75) + 1.5 * IQR(b_neutro)
+  ) %>%
+  filter(b_neutro >= lower_bound & b_neutro <= upper_bound) %>% 
+  ggplot(aes(x = b_neutro, fill = as.factor(nafld_outcome))) +
+  geom_density(alpha = 0.7) +
+  scale_fill_manual(values = c("#BCBDDC", "lightyellow"), name = "NAFLD Outcome", 
+                    labels = c("Healthy", "Disease")) +
+  labs(
+    x = "Neutrophils",
+    y = "Density",
+    title = "Density Plot of b_neutro by NAFLD Outcome"
+  ) +
+  theme_minimal(base_size = 14) + 
+  theme(
+    legend.position = "bottom",               
+    plot.title = element_text(size = 8),      
+    axis.title.x = element_text(size = 8),    
+    axis.title.y = element_text(size = 8),   
+    axis.text.x = element_text(size = 8),     
+    axis.text.y = element_text(size = 8), 
+    legend.title = element_text(size = 8),      
+    legend.text = element_text(size = 8),
+    legend.key.size = unit(0.4, "cm")
+  ) +  
+  geom_vline(data = quantiles, aes(xintercept = q25, 
+                                   color = as.factor(nafld_outcome)), 
+             linetype = "dashed", size = 0.8, show.legend = FALSE) +
+  geom_vline(data = quantiles, aes(xintercept = median, 
+                                   color = as.factor(nafld_outcome)), 
+             linetype = "solid", size = 1, show.legend = FALSE) +
+  geom_vline(data = quantiles, aes(xintercept = q75, 
+                                   color = as.factor(nafld_outcome)), 
+             linetype = "dashed", size = 0.8, show.legend = FALSE) +
+  scale_color_manual(values = c("#8A2BE2", "#FDAE6B"))
+
+
+quantiles <- ukb_data %>%
+  group_by(nafld_outcome) %>%
+  filter(!is.na(b_plate)) %>%
+  summarize(
+    q25 = quantile(b_plate, 0.25),
+    median = median(b_plate),
+    q75 = quantile(b_plate, 0.75)
+  )
+
+figure_17 <- ukb_data %>% 
+  group_by(nafld_outcome) %>% 
+  filter(!is.na(b_plate)) %>% 
+  mutate(
+    lower_bound = quantile(b_plate, 0.25) - 1.5 * IQR(b_plate),
+    upper_bound = quantile(b_plate, 0.75) + 1.5 * IQR(b_plate)
+  ) %>%
+  filter(b_plate >= lower_bound & b_plate <= upper_bound) %>% 
+  ggplot(aes(x = b_plate, fill = as.factor(nafld_outcome))) +
+  geom_density(alpha = 0.7) +
+  scale_fill_manual(values = c("#BCBDDC", "lightyellow"), name = "NAFLD Outcome", 
+                    labels = c("Healthy", "Disease")) +
+  labs(
+    x = "Platelets",
+    y = "Density",
+    title = "Density Plot of b_plate by NAFLD Outcome"
+  ) +
+  theme_minimal(base_size = 14) + 
+  theme(
+    legend.position = "bottom",               
+    plot.title = element_text(size = 8),      
+    axis.title.x = element_text(size = 8),    
+    axis.title.y = element_text(size = 8),   
+    axis.text.x = element_text(size = 8),     
+    axis.text.y = element_text(size = 8), 
+    legend.title = element_text(size = 8),      
+    legend.text = element_text(size = 8),
+    legend.key.size = unit(0.4, "cm")
+  ) +  
+  geom_vline(data = quantiles, aes(xintercept = q25, 
+                                   color = as.factor(nafld_outcome)), 
+             linetype = "dashed", size = 0.8, show.legend = FALSE) +
+  geom_vline(data = quantiles, aes(xintercept = median, 
+                                   color = as.factor(nafld_outcome)), 
+             linetype = "solid", size = 1, show.legend = FALSE) +
+  geom_vline(data = quantiles, aes(xintercept = q75, 
+                                   color = as.factor(nafld_outcome)), 
+             linetype = "dashed", size = 0.8, show.legend = FALSE) +
+  scale_color_manual(values = c("#8A2BE2", "#FDAE6B"))
+
+grid.arrange(figure_14, figure_15, figure_16, figure_17, nrow = 2, ncol = 2)
+```
+
+
+
+# 2
+```{r message = FALSE, warning = FALSE}
+quantiles <- ukb_data %>%
+  group_by(cirrho_outcome) %>%
+  filter(!is.na(b_lympho)) %>%
+  summarize(
+    q25 = quantile(b_lympho, 0.25),
+    median = median(b_lympho),
+    q75 = quantile(b_lympho, 0.75))
+
+figure_18 <- ukb_data %>% 
+  group_by(cirrho_outcome) %>% 
+  filter(!is.na(b_lympho)) %>% 
+  mutate(
+    lower_bound = quantile(b_lympho, 0.25) - 1.5 * IQR(b_lympho),
+    upper_bound = quantile(b_lympho, 0.75) + 1.5 * IQR(b_lympho)
+  ) %>%
+  filter(b_lympho >= lower_bound & b_lympho <= upper_bound) %>% 
+  ggplot(aes(x = b_lympho, fill = as.factor(cirrho_outcome))) +
+  geom_density(alpha = 0.7) +
+  scale_fill_manual(values = c("#BCBDDC", "lightyellow"), name = "Cirrhosis Outcome", 
+                    labels = c("Healthy", "Disease")) +
+  labs(
+    x = "Lymphocyte",
+    y = "Density",
+    title = "Density Plot of b_lympho by Cirrhosis Outcome"
+  ) +
+  theme_minimal(base_size = 14) + 
+  theme(
+    legend.position = "bottom",               
+    plot.title = element_text(size = 8),      
+    axis.title.x = element_text(size = 8),    
+    axis.title.y = element_text(size = 8),   
+    axis.text.x = element_text(size = 8),     
+    axis.text.y = element_text(size = 8), 
+    legend.title = element_text(size = 8),      
+    legend.text = element_text(size = 8),
+    legend.key.size = unit(0.4, "cm")
+  ) +  
+  geom_vline(data = quantiles, aes(xintercept = q25, 
+                                   color = as.factor(cirrho_outcome)), 
+             linetype = "dashed", size = 0.8, show.legend = FALSE) +
+  geom_vline(data = quantiles, aes(xintercept = median, 
+                                   color = as.factor(cirrho_outcome)), 
+             linetype = "solid", size = 1, show.legend = FALSE) +
+  geom_vline(data = quantiles, aes(xintercept = q75, 
+                                   color = as.factor(cirrho_outcome)), 
+             linetype = "dashed", size = 0.8, show.legend = FALSE) +
+  scale_color_manual(values = c("#8A2BE2", "#FDAE6B"))
+
+
+quantiles <- ukb_data %>%
+  group_by(cirrho_outcome) %>%
+  filter(!is.na(b_mono)) %>%
+  summarize(
+    q25 = quantile(b_mono, 0.25),
+    median = median(b_mono),
+    q75 = quantile(b_mono, 0.75)
+  )
+
+figure_19 <-ukb_data %>% 
+  group_by(cirrho_outcome) %>% 
+  filter(!is.na(b_mono)) %>% 
+  mutate(
+    lower_bound = quantile(b_mono, 0.25) - 1.5 * IQR(b_mono),
+    upper_bound = quantile(b_mono, 0.75) + 1.5 * IQR(b_mono)
+  ) %>%
+  filter(b_mono >= lower_bound & b_mono <= upper_bound) %>% 
+  ggplot(aes(x = b_mono, fill = as.factor(cirrho_outcome))) +
+  geom_density(alpha = 0.7) +
+  scale_fill_manual(values = c("#BCBDDC", "lightyellow"), name = "Cirrhosis Outcome", 
+                    labels = c("Healthy", "Disease")) +
+  labs(
+    x = "Monocytes",
+    y = "Density",
+    title = "Density Plot of b_mono by Cirrhosis Outcome"
+  ) +
+  theme_minimal(base_size = 14) + 
+  theme(
+    legend.position = "bottom",               
+    plot.title = element_text(size = 8),      
+    axis.title.x = element_text(size = 8),    
+    axis.title.y = element_text(size = 8),   
+    axis.text.x = element_text(size = 8),     
+    axis.text.y = element_text(size = 8), 
+    legend.title = element_text(size = 8),      
+    legend.text = element_text(size = 8),
+    legend.key.size = unit(0.4, "cm")
+  ) +  
+  geom_vline(data = quantiles, aes(xintercept = q25, 
+                                   color = as.factor(cirrho_outcome)), 
+             linetype = "dashed", size = 0.8, show.legend = FALSE) +
+  geom_vline(data = quantiles, aes(xintercept = median, 
+                                   color = as.factor(cirrho_outcome)), 
+             linetype = "solid", size = 1, show.legend = FALSE) +
+  geom_vline(data = quantiles, aes(xintercept = q75, 
+                                   color = as.factor(cirrho_outcome)), 
+             linetype = "dashed", size = 0.8, show.legend = FALSE) +
+  scale_color_manual(values = c("#8A2BE2", "#FDAE6B"))
+
+quantiles <- ukb_data %>%
+  group_by(cirrho_outcome) %>%
+  filter(!is.na(b_neutro)) %>%
+  summarize(
+    q25 = quantile(b_neutro, 0.25),
+    median = median(b_neutro),
+    q75 = quantile(b_neutro, 0.75)
+  )
+
+figure_20 <- ukb_data %>% 
+  group_by(cirrho_outcome) %>% 
+  filter(!is.na(b_neutro)) %>% 
+  mutate(
+    lower_bound = quantile(b_neutro, 0.25) - 1.5 * IQR(b_neutro),
+    upper_bound = quantile(b_neutro, 0.75) + 1.5 * IQR(b_neutro)
+  ) %>%
+  filter(b_neutro >= lower_bound & b_neutro <= upper_bound) %>% 
+  ggplot(aes(x = b_neutro, fill = as.factor(cirrho_outcome))) +
+  geom_density(alpha = 0.7) +
+  scale_fill_manual(values = c("#BCBDDC", "lightyellow"), name = "Cirrhosis Outcome", 
+                    labels = c("Healthy", "Disease")) +
+  labs(
+    x = "Neutrophils",
+    y = "Density",
+    title = "Density Plot of b_neutro by Cirrhosis Outcome"
+  ) +
+  theme_minimal(base_size = 14) + 
+  theme(
+    legend.position = "bottom",               
+    plot.title = element_text(size = 8),      
+    axis.title.x = element_text(size = 8),    
+    axis.title.y = element_text(size = 8),   
+    axis.text.x = element_text(size = 8),     
+    axis.text.y = element_text(size = 8), 
+    legend.title = element_text(size = 8),      
+    legend.text = element_text(size = 8),
+    legend.key.size = unit(0.4, "cm")
+  ) +  
+  geom_vline(data = quantiles, aes(xintercept = q25, 
+                                   color = as.factor(cirrho_outcome)), 
+             linetype = "dashed", size = 0.8, show.legend = FALSE) +
+  geom_vline(data = quantiles, aes(xintercept = median, 
+                                   color = as.factor(cirrho_outcome)), 
+             linetype = "solid", size = 1, show.legend = FALSE) +
+  geom_vline(data = quantiles, aes(xintercept = q75, 
+                                   color = as.factor(cirrho_outcome)), 
+             linetype = "dashed", size = 0.8, show.legend = FALSE) +
+  scale_color_manual(values = c("#8A2BE2", "#FDAE6B"))
+
+
+quantiles <- ukb_data %>%
+  group_by(cirrho_outcome) %>%
+  filter(!is.na(b_plate)) %>%
+  summarize(
+    q25 = quantile(b_plate, 0.25),
+    median = median(b_plate),
+    q75 = quantile(b_plate, 0.75)
+  )
+
+figure_21 <- ukb_data %>% 
+  group_by(cirrho_outcome) %>% 
+  filter(!is.na(b_plate)) %>% 
+  mutate(
+    lower_bound = quantile(b_plate, 0.25) - 1.5 * IQR(b_plate),
+    upper_bound = quantile(b_plate, 0.75) + 1.5 * IQR(b_plate)
+  ) %>%
+  filter(b_plate >= lower_bound & b_plate <= upper_bound) %>% 
+  ggplot(aes(x = b_plate, fill = as.factor(cirrho_outcome))) +
+  geom_density(alpha = 0.7) +
+  scale_fill_manual(values = c("#BCBDDC", "lightyellow"), name = "Cirrhosis Outcome", 
+                    labels = c("Healthy", "Disease")) +
+  labs(
+    x = "Platelets",
+    y = "Density",
+    title = "Density Plot of b_plate by Cirrhosis Outcome"
+  ) +
+  theme_minimal(base_size = 14) + 
+  theme(
+    legend.position = "bottom",               
+    plot.title = element_text(size = 8),      
+    axis.title.x = element_text(size = 8),    
+    axis.title.y = element_text(size = 8),   
+    axis.text.x = element_text(size = 8),     
+    axis.text.y = element_text(size = 8), 
+    legend.title = element_text(size = 8),      
+    legend.text = element_text(size = 8),
+    legend.key.size = unit(0.4, "cm")
+  ) +  
+  geom_vline(data = quantiles, aes(xintercept = q25, 
+                                   color = as.factor(cirrho_outcome)), 
+             linetype = "dashed", size = 0.8, show.legend = FALSE) +
+  geom_vline(data = quantiles, aes(xintercept = median, 
+                                   color = as.factor(cirrho_outcome)), 
+             linetype = "solid", size = 1, show.legend = FALSE) +
+  geom_vline(data = quantiles, aes(xintercept = q75, 
+                                   color = as.factor(cirrho_outcome)), 
+             linetype = "dashed", size = 0.8, show.legend = FALSE) +
+  scale_color_manual(values = c("#8A2BE2", "#FDAE6B"))
+
+grid.arrange(figure_18, figure_19, figure_20, figure_21, nrow = 2, ncol = 2)
+```
+
+
+
+
+
+
+
+
+# useful plots
+```{r message = FALSE, warning = FALSE}
+quantiles <- ukb_data %>%
+  group_by(nafld_outcome) %>%
+  filter(!is.na(expo_lmr)) %>%
+  summarize(
+    q25 = quantile(expo_lmr, 0.25),
+    median = median(expo_lmr),
+    q75 = quantile(expo_lmr, 0.75))
+
+figure_6 <- ukb_data %>% 
+  group_by(nafld_outcome) %>% 
+  filter(!is.na(expo_lmr)) %>% 
+  mutate(
+    lower_bound = quantile(expo_lmr, 0.25) - 1.5 * IQR(expo_lmr),
+    upper_bound = quantile(expo_lmr, 0.75) + 1.5 * IQR(expo_lmr)
+  ) %>%
+  filter(expo_lmr >= lower_bound & expo_lmr <= upper_bound) %>% 
+  ggplot(aes(x = expo_lmr, fill = as.factor(nafld_outcome))) +
+  geom_density(alpha = 0.7) +
+  scale_fill_manual(values = c("skyblue", "pink"), name = "NAFLD Outcome", 
+                    labels = c("Healthy", "Disease")) +
+  labs(
+    x = "Lymphocyte-to-Monocyte Ratio (LMR)",
+    y = "Density",
+    title = "Density Plot of expo_lmr by NAFLD Outcome"
+  ) +
+  theme_minimal(base_size = 14) + 
+  theme(
+    legend.position = "bottom",               
+    plot.title = element_text(size = 8),      
+    axis.title.x = element_text(size = 8),    
+    axis.title.y = element_text(size = 8),   
+    axis.text.x = element_text(size = 8),     
+    axis.text.y = element_text(size = 8), 
+    legend.title = element_text(size = 8),      
+    legend.text = element_text(size = 8),
+    legend.key.size = unit(0.4, "cm")
+  ) +  
+  geom_vline(data = quantiles, aes(xintercept = q25, 
+                                   color = as.factor(nafld_outcome)), 
+             linetype = "dashed", size = 0.8, show.legend = FALSE) +
+  geom_vline(data = quantiles, aes(xintercept = median, 
+                                   color = as.factor(nafld_outcome)), 
+             linetype = "solid", size = 1, show.legend = FALSE) +
+  geom_vline(data = quantiles, aes(xintercept = q75, 
+                                   color = as.factor(nafld_outcome)), 
+             linetype = "dashed", size = 0.8, show.legend = FALSE) +
+  scale_color_manual(values = c("dodgerblue", "coral"))
+
+
+quantiles <- ukb_data %>%
+  group_by(nafld_outcome) %>%
+  filter(!is.na(expo_sii)) %>%
+  summarize(
+    q25 = quantile(expo_sii, 0.25),
+    median = median(expo_sii),
+    q75 = quantile(expo_sii, 0.75)
+  )
+
+figure_7 <-ukb_data %>% 
+  group_by(nafld_outcome) %>% 
+  filter(!is.na(expo_sii)) %>% 
+  mutate(
+    lower_bound = quantile(expo_sii, 0.25) - 1.5 * IQR(expo_sii),
+    upper_bound = quantile(expo_sii, 0.75) + 1.5 * IQR(expo_sii)
+  ) %>%
+  filter(expo_sii >= lower_bound & expo_sii <= upper_bound) %>% 
+  ggplot(aes(x = expo_sii, fill = as.factor(nafld_outcome))) +
+  geom_density(alpha = 0.7) +
+  scale_fill_manual(values = c("skyblue", "pink"), name = "NAFLD Outcome", 
+                    labels = c("Healthy", "Disease")) +
+  labs(
+    x = "Systemic Immune-Inflammation Index (SII)",
+    y = "Density",
+    title = "Density Plot of expo_sii by NAFLD Outcome"
+  ) +
+  theme_minimal(base_size = 14) + 
+  theme(
+    legend.position = "bottom",               
+    plot.title = element_text(size = 8),      
+    axis.title.x = element_text(size = 8),    
+    axis.title.y = element_text(size = 8),   
+    axis.text.x = element_text(size = 8),     
+    axis.text.y = element_text(size = 8), 
+    legend.title = element_text(size = 8),      
+    legend.text = element_text(size = 8),
+    legend.key.size = unit(0.4, "cm")
+  ) +  
+  geom_vline(data = quantiles, aes(xintercept = q25, 
+                                   color = as.factor(nafld_outcome)), 
+             linetype = "dashed", size = 0.8, show.legend = FALSE) +
+  geom_vline(data = quantiles, aes(xintercept = median, 
+                                   color = as.factor(nafld_outcome)), 
+             linetype = "solid", size = 1, show.legend = FALSE) +
+  geom_vline(data = quantiles, aes(xintercept = q75, 
+                                   color = as.factor(nafld_outcome)), 
+             linetype = "dashed", size = 0.8, show.legend = FALSE) +
+  scale_color_manual(values = c("dodgerblue", "coral"))
+
+quantiles <- ukb_data %>%
+  group_by(nafld_outcome) %>%
+  filter(!is.na(expo_npar)) %>%
+  summarize(
+    q25 = quantile(expo_npar, 0.25),
+    median = median(expo_npar),
+    q75 = quantile(expo_npar, 0.75)
+  )
+
+figure_8 <-ukb_data %>% 
+  group_by(nafld_outcome) %>% 
+  filter(!is.na(expo_npar)) %>% 
+  mutate(
+    lower_bound = quantile(expo_npar, 0.25) - 1.5 * IQR(expo_npar),
+    upper_bound = quantile(expo_npar, 0.75) + 1.5 * IQR(expo_npar)
+  ) %>%
+  filter(expo_npar >= lower_bound & expo_npar <= upper_bound) %>% 
+  ggplot(aes(x = expo_npar, fill = as.factor(nafld_outcome))) +
+  geom_density(alpha = 0.7) +
+  scale_fill_manual(values = c("skyblue", "pink"), name = "NAFLD Outcome", 
+                    labels = c("Healthy", "Disease")) +
+  labs(
+    x = "Neutrophil-to-Albumin Ratio (NPAR)",
+    y = "Density",
+    title = "Density Plot of expo_npar by NAFLD Outcome"
+  ) +
+  theme_minimal(base_size = 14) + 
+  theme(
+    legend.position = "bottom",               
+    plot.title = element_text(size = 8),      
+    axis.title.x = element_text(size = 8),    
+    axis.title.y = element_text(size = 8),   
+    axis.text.x = element_text(size = 8),     
+    axis.text.y = element_text(size = 8), 
+    legend.title = element_text(size = 8),      
+    legend.text = element_text(size = 8),
+    legend.key.size = unit(0.4, "cm")
+  ) +  
+  geom_vline(data = quantiles, aes(xintercept = q25, 
+                                   color = as.factor(nafld_outcome)), 
+             linetype = "dashed", size = 0.8, show.legend = FALSE) +
+  geom_vline(data = quantiles, aes(xintercept = median, 
+                                   color = as.factor(nafld_outcome)), 
+             linetype = "solid", size = 1, show.legend = FALSE) +
+  geom_vline(data = quantiles, aes(xintercept = q75, 
+                                   color = as.factor(nafld_outcome)), 
+             linetype = "dashed", size = 0.8, show.legend = FALSE) +
+  scale_color_manual(values = c("dodgerblue", "coral"))
+
+
+figure_9 <-ukb_data %>% 
+  filter(!is.na(expo_nps)) %>% 
+  group_by(nafld_outcome, expo_nps) %>% 
+  summarize(count = n()) %>% 
+  ungroup() %>% 
+  mutate(total_count = sum(count), 
+         percentage = count / total_count * 100) %>%  
+  ggplot(aes(x = as.factor(expo_nps), y = percentage, fill = as.factor(nafld_outcome))) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.9), alpha = 0.8) +  
+  geom_text(aes(label = paste0(round(percentage, 1), "%")),  
+            position = position_dodge(width = 0.9), vjust = 0.75, size = 3) + 
+  scale_fill_manual(values = c("skyblue", "pink"), name = "NAFLD Outcome", 
+                    labels = c("Healthy", "Disease")) +
+  labs(
+    x = "Naples Prognostic Score (NPS)",
+    y = "Percentage of Total Population",
+    title = "Percentage of Total Population by NPS and NAFLD Outcome"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position = "bottom",               
+    plot.title = element_text(size = 8),      
+    axis.title.x = element_text(size = 8),    
+    axis.title.y = element_text(size = 8),   
+    axis.text.x = element_text(size = 8),     
+    axis.text.y = element_text(size = 8), 
+    legend.title = element_text(size = 8),      
+    legend.text = element_text(size = 8),
+    legend.key.size = unit(0.4, "cm")
+  ) 
+
+grid.arrange(figure_6, figure_7, figure_8, figure_9, nrow = 2, ncol = 2)
+```
+
+
+
+```{r message = FALSE, warning = FALSE}
+quantiles <- ukb_data %>%
+  group_by(cirrho_outcome) %>%
+  filter(!is.na(expo_lmr)) %>%
+  summarize(
+    q25 = quantile(expo_lmr, 0.25),
+    median = median(expo_lmr),
+    q75 = quantile(expo_lmr, 0.75))
+
+figure_10 <- ukb_data %>% 
+  group_by(cirrho_outcome) %>% 
+  filter(!is.na(expo_lmr)) %>% 
+  mutate(
+    lower_bound = quantile(expo_lmr, 0.25) - 1.5 * IQR(expo_lmr),
+    upper_bound = quantile(expo_lmr, 0.75) + 1.5 * IQR(expo_lmr)
+  ) %>%
+  filter(expo_lmr >= lower_bound & expo_lmr <= upper_bound) %>% 
+  ggplot(aes(x = expo_lmr, fill = as.factor(cirrho_outcome))) +
+  geom_density(alpha = 0.7) +
+  scale_fill_manual(values = c("skyblue", "pink"), name = "Cirrhosis Outcome", 
+                    labels = c("Healthy", "Disease")) +
+  labs(
+    x = "Lymphocyte-to-Monocyte Ratio (LMR)",
+    y = "Density",
+    title = "Density Plot of expo_lmr by Cirrhosis Outcome"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position = "bottom",               
+    plot.title = element_text(size = 8),      
+    axis.title.x = element_text(size = 8),    
+    axis.title.y = element_text(size = 8),   
+    axis.text.x = element_text(size = 8),     
+    axis.text.y = element_text(size = 8), 
+    legend.title = element_text(size = 8),      
+    legend.text = element_text(size = 8),
+    legend.key.size = unit(0.4, "cm")
+  )  + 
+  geom_vline(data = quantiles, aes(xintercept = q25, 
+                                   color = as.factor(cirrho_outcome)), 
+             linetype = "dashed", size = 0.8, show.legend = FALSE) +
+  geom_vline(data = quantiles, aes(xintercept = median, 
+                                   color = as.factor(cirrho_outcome)), 
+             linetype = "solid", size = 1, show.legend = FALSE) +
+  geom_vline(data = quantiles, aes(xintercept = q75, 
+                                   color = as.factor(cirrho_outcome)), 
+             linetype = "dashed", size = 0.8, show.legend = FALSE) +
+  scale_color_manual(values = c("dodgerblue", "coral"))
+
+quantiles <- ukb_data %>%
+  group_by(cirrho_outcome) %>%
+  filter(!is.na(expo_sii)) %>%
+  summarize(
+    q25 = quantile(expo_sii, 0.25),
+    median = median(expo_sii),
+    q75 = quantile(expo_sii, 0.75)
+  )
+
+figure_11 <- ukb_data %>% 
+  group_by(cirrho_outcome) %>% 
+  filter(!is.na(expo_sii)) %>% 
+  mutate(
+    lower_bound = quantile(expo_sii, 0.25) - 1.5 * IQR(expo_sii),
+    upper_bound = quantile(expo_sii, 0.75) + 1.5 * IQR(expo_sii)
+  ) %>%
+  filter(expo_sii >= lower_bound & expo_sii <= upper_bound) %>% 
+  ggplot(aes(x = expo_sii, fill = as.factor(cirrho_outcome))) +
+  geom_density(alpha = 0.7) +
+  scale_fill_manual(values = c("skyblue", "pink"), name = "Cirrhosis Outcome", 
+                    labels = c("Healthy", "Disease")) +
+  labs(
+    x = "Systemic Immune-Inflammation Index (SII)",
+    y = "Density",
+    title = "Density Plot of expo_sii by Cirrhosis Outcome"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position = "bottom",               
+    plot.title = element_text(size = 8),      
+    axis.title.x = element_text(size = 8),    
+    axis.title.y = element_text(size = 8),   
+    axis.text.x = element_text(size = 8),     
+    axis.text.y = element_text(size = 8), 
+    legend.title = element_text(size = 8),      
+    legend.text = element_text(size = 8),
+    legend.key.size = unit(0.4, "cm")
+  )  + 
+  geom_vline(data = quantiles, aes(xintercept = q25, 
+                                   color = as.factor(cirrho_outcome)), 
+             linetype = "dashed", size = 0.8, show.legend = FALSE) +
+  geom_vline(data = quantiles, aes(xintercept = median, 
+                                   color = as.factor(cirrho_outcome)), 
+             linetype = "solid", size = 1, show.legend = FALSE) +
+  geom_vline(data = quantiles, aes(xintercept = q75, 
+                                   color = as.factor(cirrho_outcome)), 
+             linetype = "dashed", size = 0.8, show.legend = FALSE) +
+  scale_color_manual(values = c("dodgerblue", "coral"))
+
+quantiles <- ukb_data %>%
+  group_by(cirrho_outcome) %>%
+  filter(!is.na(expo_npar)) %>%
+  summarize(
+    q25 = quantile(expo_npar, 0.25),
+    median = median(expo_npar),
+    q75 = quantile(expo_npar, 0.75)
+  )
+
+figure_12 <- ukb_data %>% 
+  group_by(cirrho_outcome) %>% 
+  filter(!is.na(expo_npar)) %>% 
+  mutate(
+    lower_bound = quantile(expo_npar, 0.25) - 1.5 * IQR(expo_npar),
+    upper_bound = quantile(expo_npar, 0.75) + 1.5 * IQR(expo_npar)
+  ) %>%
+  filter(expo_npar >= lower_bound & expo_npar <= upper_bound) %>% 
+  ggplot(aes(x = expo_npar, fill = as.factor(cirrho_outcome))) +
+  geom_density(alpha = 0.7) +
+  scale_fill_manual(values = c("skyblue", "pink"), name = "Cirrhosis Outcome", 
+                    labels = c("Healthy", "Disease")) +
+  labs(
+    x = "Neutrophil-to-Albumin Ratio (NPAR)",
+    y = "Density",
+    title = "Density Plot of expo_npar by Cirrhosis Outcome"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position = "bottom",               
+    plot.title = element_text(size = 8),      
+    axis.title.x = element_text(size = 8),    
+    axis.title.y = element_text(size = 8),   
+    axis.text.x = element_text(size = 8),     
+    axis.text.y = element_text(size = 8), 
+    legend.title = element_text(size = 8),      
+    legend.text = element_text(size = 8),
+    legend.key.size = unit(0.4, "cm")
+  )  + 
+  geom_vline(data = quantiles, aes(xintercept = q25, 
+                                   color = as.factor(cirrho_outcome)), 
+             linetype = "dashed", size = 0.8, show.legend = FALSE) +
+  geom_vline(data = quantiles, aes(xintercept = median, 
+                                   color = as.factor(cirrho_outcome)), 
+             linetype = "solid", size = 1, show.legend = FALSE) +
+  geom_vline(data = quantiles, aes(xintercept = q75, 
+                                   color = as.factor(cirrho_outcome)), 
+             linetype = "dashed", size = 0.8, show.legend = FALSE) +
+  scale_color_manual(values = c("dodgerblue", "coral"))
+
+figure_13 <- ukb_data %>% 
+  filter(!is.na(expo_nps)) %>% 
+  group_by(cirrho_outcome, expo_nps) %>% 
+  summarize(count = n()) %>% 
+  ungroup() %>% 
+  mutate(total_count = sum(count), 
+         percentage = count / total_count * 100) %>%  
+  ggplot(aes(x = as.factor(expo_nps), y = percentage, fill = as.factor(cirrho_outcome))) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.9), alpha = 0.8) +  
+  geom_text(aes(label = paste0(round(percentage, 1), "%")),  
+            position = position_dodge(width = 0.9), vjust = 0.5, size = 3) + 
+  scale_fill_manual(values = c("skyblue", "pink"), name = "Cirrhosis Outcome", 
+                    labels = c("Healthy", "Disease")) +
+  labs(
+    x = "Naples Prognostic Score (NPS)",
+    y = "Percentage of Total Population",
+    title = "Percentage of Total Population by NPS and Cirrhosis Outcome"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position = "bottom",               
+    plot.title = element_text(size = 8),      
+    axis.title.x = element_text(size = 8),    
+    axis.title.y = element_text(size = 8),   
+    axis.text.x = element_text(size = 8),     
+    axis.text.y = element_text(size = 8), 
+    legend.title = element_text(size = 8),      
+    legend.text = element_text(size = 8),
+    legend.key.size = unit(0.4, "cm")
+  ) 
+
+grid.arrange(figure_10, figure_11, figure_12, figure_13, nrow = 2, ncol = 2)
+```
+
+
+
+

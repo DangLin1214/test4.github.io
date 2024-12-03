@@ -1,0 +1,26 @@
+---
+title: "Discussion"
+output: 
+  html_document:
+    theme: flatly
+    toc: true
+    toc_float: true
+    code_folding: hide
+---
+
+# Discussion
+
+Our analysis offers valuable insights into the demographic, lifestyle, and health factors influencing disease outcomes. Age and sex distributions showed consistent trends, with older age groups displaying greater variability in health outcomes, reflecting longevity and disparities in access to healthcare. The inverse association between alcohol consumption and disease incidence among non-drinkers suggests potential confounding by underlying health conditions, such as abstinence due to pre-existing illnesses, emphasizing the need to consider these factors in behavioral assessments.
+
+Blood pressure emerged as a critical predictor of disease risk, highlighting the importance of hypertension management, particularly in older adults. Socioeconomic disparities were evident, with a positive correlation between income and diet quality reflecting broader inequities in health behaviors and access to nutritious food. Sleep duration patterns varied across age groups, with shorter durations among younger participants and greater variability in older adults, potentially linked to lifestyle factors and age-related changes in circadian rhythms. These findings underscore the complex interplay of demographic and behavioral factors influencing health.
+
+The survival analysis further illuminated the associations between baseline exposure categories (sii_cat, nps_cat, npar_cat, and lmr_cat) and health outcomes. Kaplan-Meier survival curves revealed distinct trends, with participants in low exposure categories demonstrating the highest survival probabilities throughout the follow-up, suggesting a protective effect against adverse health outcomes. In contrast, those in high exposure categories exhibited the steepest declines in survival, with clear separations from other groups, indicating a significant association between increased exposure levels and elevated risk. These findings were supported by statistical tests (p-values < 0.001), affirming the robustness of the observed dose-response relationships.
+
+Intermediate exposure groups showed moderate survival declines, reflecting incremental increases in risk. Survival curves for these groups revealed a steady deterioration compared to low exposure groups, albeit less severe than those in high exposure categories. These results highlight the continuum of risk associated with varying exposure levels and the critical need for targeted interventions to mitigate exposure and improve health outcomes.
+
+Demographic and behavioral variables, including age, income, diet quality, and smoking status, played pivotal roles in shaping survival trends. Older participants and individuals with lower incomes were overrepresented in higher exposure categories, exacerbating their vulnerability to adverse outcomes. Similarly, poor dietary habits and higher smoking prevalence in intermediate and high exposure groups compounded survival disparities. These findings collectively emphasize the importance of addressing both exposure levels and underlying socioeconomic and behavioral determinants to enhance population health and reduce disparities in outcomes.
+
+
+# Conclusion
+
+This analysis integrates insights from EDA and survival modeling to highlight the multifaceted drivers of health outcomes. Demographic, socioeconomic, and behavioral factors interact with baseline exposures to shape survival probabilities. Addressing high-risk exposures, coupled with efforts to reduce socioeconomic inequities, is essential for improving health outcomes. These findings provide a foundation for future research to refine intervention strategies and inform public health policies targeting vulnerable populations.
