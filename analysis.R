@@ -6,7 +6,7 @@ library(tableone)
 library(survminer)
 
 
-dt = read_dta("./data_prepared.dta") |>
+dt = read_dta("./external_data/data_prepared.dta") |>
   janitor::clean_names() |>
   mutate(
     expo_lmr_cat = as.factor(expo_lmr_cat),
@@ -40,7 +40,7 @@ tableone_create = function(dt, expo) {
                    smd = TRUE,
                    addOverall = TRUE) |>
     print(quote = FALSE, noSpaces = TRUE, printToggle = FALSE) |>
-    write.csv(file  = paste0("Baseline_", expo, ".csv"))
+    write.csv(file  = paste0("./csv/", "Baseline_", expo, ".csv"))
     
 }
 
@@ -163,7 +163,7 @@ nafld_results =
   select(Model, everything()) |>
   mutate(across(where(is.list), as.character))
 
-write.csv(nafld_results, file  = "Main_cox_nafld.csv")
+write.csv(nafld_results, file  = "./csv/Main_cox_nafld.csv")
   
 cirrho_results =
   results[["cirrho"]] |>
@@ -174,7 +174,7 @@ cirrho_results =
   select(Model, everything()) |>
   mutate(across(where(is.list), as.character))
 
-write.csv(cirrho_results, file  = "Main_cox_cirrhosis.csv")
+write.csv(cirrho_results, file  = "./csv/Main_cox_cirrhosis.csv")
 
 
 # cumulative incidence curve ----
@@ -211,7 +211,7 @@ for (expo in expo_list) {
         print = FALSE
       )
     
-    name = paste0("cumhaz_", expo , "_", outcome, ".png")
+    name = paste0("./png/", "cumhaz_", expo , "_", outcome, ".png")
     ggsave(name, plot = combined_plot, width = 16, height = 6, dpi = 300)
     
   }
