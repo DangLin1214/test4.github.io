@@ -14,7 +14,7 @@ library(kableExtra)
 
 ### Baseline Characteristics by LMR Exposure Categories
 ```{r message = FALSE, warning = FALSE}
-Baseline_expo_lmr_cat_results <- read_csv("./Baseline_expo_lmr_cat.csv")
+Baseline_expo_lmr_cat_results <- read_csv("./csv/Baseline_expo_lmr_cat.csv")
 
 Baseline_expo_lmr_cat_cleaned <- Baseline_expo_lmr_cat_results %>%
   select(-test) %>% 
@@ -36,7 +36,7 @@ knitr::kable(
 
 ### Baseline Characteristics by SII Exposure Categories
 ```{r message = FALSE, warning = FALSE}
-Baseline_expo_sii_cat_results <- read_csv("./Baseline_expo_sii_cat.csv")
+Baseline_expo_sii_cat_results <- read_csv("./csv/Baseline_expo_sii_cat.csv")
 
 Baseline_expo_sii_cat_cleaned <- Baseline_expo_sii_cat_results %>%
   select(-test) %>% 
@@ -58,7 +58,7 @@ knitr::kable(
 
 ### Baseline Characteristics by NPAR Exposure Categories
 ```{r message = FALSE, warning = FALSE}
-Baseline_expo_npar_cat_results <- read_csv("./Baseline_expo_npar_cat.csv")
+Baseline_expo_npar_cat_results <- read_csv("./csv/Baseline_expo_npar_cat.csv")
 
 Baseline_expo_npar_cat_cleaned <- Baseline_expo_npar_cat_results %>%
   select(-test) %>%
@@ -81,7 +81,7 @@ knitr::kable(
 
 ### Baseline Characteristics by NPS Exposure Categories
 ```{r message = FALSE, warning = FALSE}
-Baseline_expo_nps_cat_results <- read_csv("./Baseline_expo_nps_cat.csv")
+Baseline_expo_nps_cat_results <- read_csv("./csv/Baseline_expo_nps_cat.csv")
 
 Baseline_expo_nps_cat_cleaned <- Baseline_expo_nps_cat_results %>%
   select(-test) %>%

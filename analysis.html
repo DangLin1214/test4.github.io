@@ -354,7 +354,7 @@ div.tocify {
   <a href="discussion.html">Discussion</a>
 </li>
 <li>
-  <a href="recommendation.html">Recommendation</a>
+  <a href="appendix.html">Appendix</a>
 </li>
 <li>
   <a href="mailto:&lt;dl3757@cumc.columbia.edu&gt;">
@@ -369,7 +369,7 @@ div.tocify {
   </a>
 </li>
 <li>
-  <a href="https://github.com/DangLin1214/Inflammatory_Indices.github.io.git">
+  <a href="https://github.com/DangLin1214/test4.github.io.git">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -455,7 +455,7 @@ to identify differences in fundamental features across exposure groups
 and to provide a reference for constructing the Cox proportional hazards
 model (see <a href="appendix.html">Appendix</a> for more detailed tables
 and explanations).</p>
-<pre class="r"><code>Baseline_expo_lmr_cat_results &lt;- read_csv(&quot;./Baseline_expo_lmr_cat.csv&quot;)
+<pre class="r"><code>Baseline_expo_lmr_cat_results &lt;- read_csv(&quot;./csv/Baseline_expo_lmr_cat.csv&quot;)
 
 Baseline_expo_lmr_cat_cleaned &lt;- Baseline_expo_lmr_cat_results %&gt;%
   select(-test) %&gt;% 
@@ -1079,7 +1079,7 @@ analysis.</p>
 id="cumulative-hazard-plot-for-expo_lmr-categories-in-nafld-outcome"
 class="section level4">
 <h4>Cumulative Hazard Plot for expo_lmr Categories in NAFLD Outcome</h4>
-<p><img src="cumhaz_expo_lmr_cat_nafld.png" style="width:180%;"></p>
+<p><img src="png/cumhaz_expo_lmr_cat_nafld.png" style="width:180%;"></p>
 <p>The cumulative hazard plot shows the association between
 lymphocyte-to-monocyte ratio (LMR) exposure categories and the risk of
 developing non-alcoholic fatty liver disease (NAFLD) over time. The
@@ -1101,7 +1101,7 @@ id="cumulative-hazard-plot-for-expo_lmr-categories-in-cirrhosis-outcome"
 class="section level4">
 <h4>Cumulative Hazard Plot for expo_lmr Categories in Cirrhosis
 Outcome</h4>
-<p><img src="cumhaz_expo_lmr_cat_cirrho.png" style="width:180%;"></p>
+<p><img src="png/cumhaz_expo_lmr_cat_cirrho.png" style="width:180%;"></p>
 <p>The cumulative hazard plot depicts the relationship between
 lymphocyte-to-monocyte ratio (LMR) exposure categories and the risk of
 developing cirrhosis over time. The three exposure categories (level 1,
@@ -1119,7 +1119,7 @@ cirrhosis risk within the observed follow-up period.</p>
 <div id="cumulative-hazard-plot-for-sii-exposure-in-nafld-outcome"
 class="section level4">
 <h4>Cumulative Hazard Plot for SII Exposure in NAFLD Outcome</h4>
-<p><img src="cumhaz_expo_sii_cat_nafld.png" style="width:180%;"></p>
+<p><img src="png/cumhaz_expo_sii_cat_nafld.png" style="width:180%;"></p>
 <p>The cumulative hazard plot illustrates the relationship between
 systemic immune-inflammation index (SII) exposure categories and the
 risk of developing non-alcoholic fatty liver disease (NAFLD) over time.
@@ -1139,7 +1139,7 @@ development.</p>
 <div id="cumulative-hazard-plot-for-sii-exposure-in-cirrhosis-outcome"
 class="section level4">
 <h4>Cumulative Hazard Plot for SII Exposure in Cirrhosis Outcome</h4>
-<p><img src="cumhaz_expo_sii_cat_cirrho.png" style="width:180%;"></p>
+<p><img src="png/cumhaz_expo_sii_cat_cirrho.png" style="width:180%;"></p>
 <p>The cumulative hazard plot shows the relationship between systemic
 immune-inflammation index (SII) exposure categories and the risk of
 developing cirrhosis over time. The three exposure categories (level 1,
@@ -1159,7 +1159,7 @@ cirrhosis.</p>
 <div id="cumulative-hazard-plot-for-sii-exposure-in-nafld-outcome-1"
 class="section level4">
 <h4>Cumulative Hazard Plot for SII Exposure in NAFLD Outcome</h4>
-<p><img src="cumhaz_expo_npar_cat_nafld.png" style="width:180%;"></p>
+<p><img src="png/cumhaz_expo_npar_cat_nafld.png" style="width:180%;"></p>
 <p>The cumulative hazard plot illustrates the association between
 systemic immune-inflammation index (SII) exposure categories and the
 risk of developing non-alcoholic fatty liver disease (NAFLD) over time.
@@ -1179,7 +1179,7 @@ measured by SII, in influencing NAFLD development.</p>
 <div id="cumulative-hazard-plot-for-npar-exposure-in-cirrhosis-outcome"
 class="section level4">
 <h4>Cumulative Hazard Plot for NPAR Exposure in Cirrhosis Outcome</h4>
-<p><img src="cumhaz_expo_npar_cat_cirrho.png" style="width:180%;"></p>
+<p><img src="png/cumhaz_expo_npar_cat_cirrho.png" style="width:180%;"></p>
 <p>The cumulative hazard plot shows the relationship between
 neutrophil-to-albumin ratio (NPAR) exposure categories and the risk of
 developing cirrhosis over time. The three exposure categories (level 1,
@@ -1197,7 +1197,7 @@ role of elevated NPAR as a marker for cirrhosis risk.</p>
 </div>
 <div id="results-for-nafld-outcome" class="section level3">
 <h3>Results for NAFLD Outcome</h3>
-<pre class="r"><code>nafld_results &lt;- read_csv(&quot;./Main_cox_nafld.csv&quot;)
+<pre class="r"><code>nafld_results &lt;- read_csv(&quot;./csv/Main_cox_nafld.csv&quot;)
 
 nafld_results_cleaned &lt;- nafld_results %&gt;%
   select(-1, -lower_conf, -upper_conf) %&gt;%
@@ -1585,10 +1585,11 @@ where increasing inflammatory marker levels strongly correlate with
 heightened NAFLD risk. The lower boundary of HRs in Category 1 and
 narrower confidence intervals (CIs) underscore the protective role of
 minimal exposure levels.</p>
+<p><br></p>
 </div>
 <div id="results-for-cirrhosis-outcome" class="section level3">
 <h3>Results for Cirrhosis Outcome</h3>
-<pre class="r"><code>cirrhosis_results &lt;- read_csv(&quot;./Main_cox_cirrhosis.csv&quot;)
+<pre class="r"><code>cirrhosis_results &lt;- read_csv(&quot;./csv/Main_cox_cirrhosis.csv&quot;)
 
 cirrhosis_results_cleaned &lt;- cirrhosis_results %&gt;%
   select(-1, -lower_conf, -upper_conf) %&gt;%
