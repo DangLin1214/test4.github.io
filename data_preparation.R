@@ -108,7 +108,7 @@ dt_slim =
     tc, hdl, non_hdl, tg, hba1c, dbp, sbp, bp_cat
   )
 
-write_dta(dt_slim, "./data/data_prepared.dta")
+write_dta(dt_slim, "./external_data/data_prepared.dta")
 
 
 # data for msm ----

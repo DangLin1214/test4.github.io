@@ -20,6 +20,11 @@ library(gridExtra)
 library(kableExtra)
 ```
 
+## Group Members
+Zicheng Wang (zw3088), Xiaohui Kang (xk2163), Mengyuan Chen (mc5698), Shuai yuan (sy3270), Dang Lin (dl3757)
+
+<br>
+
 ## Motivation 
 Chronic diseases like non-alcoholic fatty liver disease (NAFLD), metabolic-associated fatty liver disease (MAFLD), and metabolic-associated steatohepatitis-related liver disease (MASLD) are becoming increasingly common and can progress to cirrhosis, liver failure, or hepatocellular carcinoma. These conditions are closely tied to systemic inflammation and immune dysregulation, making it essential to identify reliable, non-invasive biomarkers that can predict disease progression and provide insights into the underlying mechanisms. Such biomarkers could improve early detection, guide interventions, and support better clinical outcomes.
 
@@ -54,7 +59,7 @@ After conducting exploratory analyses and evaluating the dataset's strengths (e.
 
 ## Exploratory Data Analysis
 ```{r}
-ukb_data <- read_dta("./data_prepared.dta")
+ukb_data <- read_dta("./external_data/data_prepared.dta")
 ```
 
 ### Age and Sex Distribution

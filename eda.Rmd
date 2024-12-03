@@ -22,7 +22,7 @@ library(gridExtra)
 
 
 ```{r}
-ukb_data <- read_dta("./data_prepared.dta")
+ukb_data <- read_dta("./external_data/data_prepared.dta")
 ```
 
 ### Age and Sex Distribution
@@ -194,15 +194,6 @@ Sleep duration varied slightly by age. Younger participants (30-39) had the shor
 <br> 
 
 ### Exposure variables and disease outcomes
-
-
-### Blood parameters and disease outcomes
-
-
-
-
-
-# 1
 ```{r message = FALSE, warning = FALSE}
 quantiles <- ukb_data %>%
   group_by(nafld_outcome) %>%
@@ -404,9 +395,10 @@ figure_17 <- ukb_data %>%
 grid.arrange(figure_14, figure_15, figure_16, figure_17, nrow = 2, ncol = 2)
 ```
 
+For the continuous biomarkers (LMR, SII, and NPAR), values are consistently lower in the NAFLD group compared to the Healthy group, indicating a complex immune-inflammatory profile in NAFLD pathogenesis. Lower LMR reflects immune imbalance, potentially favoring innate over adaptive immunity, while decreased SII suggests a unique inflammatory response with possible compensatory mechanisms. Similarly, lower NPAR in NAFLD may indicate early changes in liver function and neutrophil activity. Despite these differences, the close median values and significant distribution overlap suggest limited discriminative power for these biomarkers alone in distinguishing NAFLD from healthy individuals. The NPS distribution shows higher proportions of healthy individuals across all scores, particularly in lower-risk categories (0-1), highlighting that while NAFLD alters immune-inflammatory profiles, this does not necessarily translate into higher prognostic risks.
 
+<br>
 
-# 2
 ```{r message = FALSE, warning = FALSE}
 quantiles <- ukb_data %>%
   group_by(cirrho_outcome) %>%
@@ -608,14 +600,11 @@ figure_21 <- ukb_data %>%
 grid.arrange(figure_18, figure_19, figure_20, figure_21, nrow = 2, ncol = 2)
 ```
 
+For the Cirrhosis group, distinct differences are observed compared to the Healthy group: LMR and SII are lower in cirrhosis, reflecting immune dysregulation and potential immune exhaustion, while NPAR is elevated, indicating impaired liver function. This pattern suggests a shift from balanced immune and inflammatory responses in healthy individuals to a dysregulated state in cirrhosis. Despite these differences, the distribution overlap between the groups indicates some shared characteristics. The NPS distribution further highlights the contrast, with minimal representation of cirrhosis cases across risk categories, indicating that these immune-inflammatory changes do not strongly impact NPS scores in cirrhosis.
 
+<br>
 
-
-
-
-
-
-# useful plots
+### Blood parameters and disease outcomes
 ```{r message = FALSE, warning = FALSE}
 quantiles <- ukb_data %>%
   group_by(nafld_outcome) %>%
@@ -799,7 +788,9 @@ figure_9 <-ukb_data %>%
 grid.arrange(figure_6, figure_7, figure_8, figure_9, nrow = 2, ncol = 2)
 ```
 
+For blood cell parameters (lymphocytes, monocytes, neutrophils, and platelets), the Healthy group consistently shows higher counts than the NAFLD group, reflecting preserved immune and hematopoietic function. Lower counts in NAFLD suggest a general depression of immune capacity and altered hematopoiesis associated with the disease. Despite this, the significant overlap in distributions suggests that individual blood cell counts alone may not serve as reliable diagnostic markers for NAFLD.
 
+<br>
 
 ```{r message = FALSE, warning = FALSE}
 quantiles <- ukb_data %>%
@@ -982,6 +973,4 @@ figure_13 <- ukb_data %>%
 grid.arrange(figure_10, figure_11, figure_12, figure_13, nrow = 2, ncol = 2)
 ```
 
-
-
-
+For these blood parameters, the Healthy group shows generally higher distribution values compared to the Cirrhosis group. Looking at the specific median lines, lymphocytes show almost identical median values between healthy and cirrhosis groups, while monocytes and neutrophils demonstrate higher median values in the cirrhosis group compared to healthy individuals, suggesting increased innate immune cell activation in liver disease. In contrast, platelets show a notably higher median in the healthy group compared to cirrhosis, with the most pronounced difference among all parameters, likely reflecting the impact of portal hypertension and possible splenic sequestration in cirrhosis. Despite the similar lymphocyte medians, the overall distribution reveals generally higher lymphocyte values in healthy individuals, indicating better preserved adaptive immunity. Distribution overlaps exist between groups across all parameters, though the platelet parameter shows the clearest separation between healthy and cirrhosis populations.
