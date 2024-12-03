@@ -73,7 +73,7 @@ $$\text{NPAR} = \frac{\text{Neutrophil Percentage}}{\text{Albumin Level (g/dL)}}
 
 ### Data Cleaning
 #### Data Cleaning Part One
-[View Full Part One Data Cleaning Steps on GitHub](https://github.com/DangLin1214/test3_abc.github.io/blob/main/data_preparation.R)
+[View Full Part One Data Cleaning Steps on GitHub](https://github.com/DangLin1214/test4.github.io/blob/main/pre_cleaning.md)
 
 The pre-cleaning process involved several key steps to transform the raw UKB dataset into a clean, analyzable format. Initially, variables were renamed to improve clarity and usability. For instance, `n_21022_0_0` was renamed to `age`, `n_31_0_0` to `sex`, and `n_21000_0_0` to `ethnicity`. New variables were derived from existing data to enhance analysis potential. For example, physical activity metrics such as `MET_walk` (`n_22037_0_0`), `MET_moderate` (`n_22038_0_0`), and `MET_vigorous` (`n_22039_0_0`) were combined to create `total_MET`, which was further categorized into activity levels using `pa_cat`. Invalid or missing data values, such as `-3` and `-1`, were replaced with `.` (missing), while specific imputations were applied where necessary, such as assigning `0.5` to dietary variables like `cooked_vegetable_0` when valid data was unavailable.
 
@@ -90,7 +90,7 @@ The cleaned and processed dataset, containing all these refined and derived vari
 <br>
 
 #### Data Cleaning Part Two
-[View Full Part Two Data Cleaning Steps on GitHub](https://github.com/DangLin1214/test3_abc.github.io/blob/main/data_preparation.R)
+[View Full Part Two Data Cleaning Steps on GitHub](https://github.com/DangLin1214/test4.github.io/blob/main/data_preparation.md)
 
 The subsequent data cleaning process was designed to ensure the dataset’s quality and readiness for complex analyses, including multi-state modeling. The process began with importing the csv file exported in the previous steps and standardizing variable names using `janitor::clean_names()` to improve readability and usability. Key variables were then transformed and categorized. For instance, `sex` was converted into a factor variable with 0 representing female and 1 representing male, while `ethnicity_cat` was categorized as 0 for white and 1 for others. Age was grouped into meaningful categories (`age_cat`): `<50`, `50–59`, `60–69`, and `≥70`. Socioeconomic variables, like `income`, and lifestyle variables, such as smoking status (`smoke_cat`), were also transformed into categorical factors.
 

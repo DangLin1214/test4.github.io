@@ -19,14 +19,14 @@ navbar:
       href: analysis.html
     - text: "Discussion"
       href: discussion.html
-    - text: "Recommendation"
-      href: recommendation.html
+    - text: "Appendix"
+      href: appendix.html
     - icon: fa-play-circle fa-lg
       href: mailto:<dl3757@cumc.columbia.edu>
     - icon: fa-envelope fa-lg
       href: mailto:<dl3757@cumc.columbia.edu>
     - icon: fa-github fa-lg
-      href: https://github.com/DangLin1214/Inflammatory_Indices.github.io.git
+      href: https://github.com/DangLin1214/test4.github.io.git
     
 output:
   html_document: 
